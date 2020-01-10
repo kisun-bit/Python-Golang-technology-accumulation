@@ -11,9 +11,4 @@ Technology accumulation in Python&Golang
 
    前言
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
