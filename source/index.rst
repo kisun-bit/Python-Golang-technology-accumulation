@@ -3,15 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Technology accumulation in Python&Golang's documentation!
+Technology accumulation in Python&Golang
 ====================================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
 
-
-   hello
+   前言
 
 Indices and tables
 ==================
