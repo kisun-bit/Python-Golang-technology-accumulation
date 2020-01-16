@@ -13,30 +13,29 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+
+import sys
+import os
 import sphinx_rtd_theme
-import recommonmark
-from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
 
 # -- Project information -----------------------------------------------------
 
 project = 'Technology accumulation in Python&Golang'
 copyright = '2020, kisun'
 author = 'kisun'
+version = '1.0'
 
 master_doc = 'index'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.1'
-
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-]
+extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -53,13 +52,13 @@ language = 'zh_CN'
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'default'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -67,15 +66,21 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-source_parsers = {
-    '.md': CommonMarkParser, 
-}
-source_sufix = ['.rst', '.md']
 
-# At the bottom of conf.py
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-                        'url_resolver': lambda url: github_doc_root + url,
-                        'auto_toc_tree_section': 'Contents',
-                        }, True)
-    app.add_transform(AutoStructify)
+# The suffix of source filenames.
+source_suffix = '.rst'
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    import sphinx_rtd_theme
+
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+_exts = "../exts"
+sys.path.append(os.path.abspath(_exts))
