@@ -18,7 +18,7 @@
 **Contents:**
 
   .. toctree::
-     :maxdepth: 1
+     :maxdepth: 0
      :glob:
 
      ../c01/*
