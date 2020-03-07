@@ -1,0 +1,64 @@
+2.1 使用collections.namedtuple构建简单类
+============================================
+
+
+基于魔术方法 *__getitme__* 和 *__len__* 实现一个纸牌类。\
+在实现之前需要了解一下 *__getitem__* 的用法
+
+.. code-block:: python
+
+    import string
+
+
+    class TestMagic(object):
+        """测试魔术方法
+        """
+
+        def __init__(self, item_codes):
+            self.item_codes = item_codes
+
+        def __getitem__(self, pos):
+            print('in getitem...')
+            return self.item_codes[pos]
+
+
+    def main():
+        t = TestMagic(list(string.ascii_lowercase))
+        print(t[0])
+
+
+    if __name__ == '__main__':
+        main()
+    
+
+    # 输出
+    # in getitem...
+    # a
+
+..
+
+其次，针对那些具有较少属性且没有方法的对象，可以使用 *collections.namedtuple* 构建简单类来表示它 \ 
+ok，那么直接上代码：
+
+.. code-block:: python
+
+    import collections
+    from itertools import chain as iter_chain
+
+    CartItem = collections.namedtuple('CartItem', ['rank', 'pattern'])
+
+
+    class PlayingCardsList(object):
+        """纸牌序列类
+        """
+        ranks = iter_chain(range(2, 11), ['J', 'Q', 'K', 'A'])
+        patterns = ['spades', 'diamonds', 'clubs', 'hearts']
+
+        def __init__(self):
+            self._cards = [CartItem(rank, pattern) for rank in self.ranks
+                        for pattern in self.patterns]
+
+        def __getitem__(self, pos):
+            return self._cards[pos]
+
+..
