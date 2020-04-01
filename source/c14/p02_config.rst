@@ -16,4 +16,4 @@ PostgreSQL支持远程访问
  * 可访问的用户 `ip` 段
  * 在文件末尾加入：`host  all  all  0.0.0.0/0  md5`
 
-5. 重启 `postgreSQL`  数据库：`service postgresl restart`
+5. 重启 `postgreSQL`  数据库：`service postgresql restart`
