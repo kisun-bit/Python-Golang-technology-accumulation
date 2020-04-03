@@ -1,0 +1,313 @@
+15.1 监控线程导致CPU占用过高
+===============================
+
+公司在进行的一个集群项目中，各子节点上报(ICE方式) *CPU* 、内存、业务数据通信网络(内网网卡)、\
+内部节点通信网络(外网网卡)等实时数据至主节点，但存在一个这样的问题，因为没有对相对固化的硬件信息做缓存 \
+导致了单线程运行环境下，超高的 *CPU* 占用，鉴于时间原因，针对需要缓存的方法增加了缓存装饰器，逻辑如下：
+
+tip: *AutoCacheHandler* 为一个自动装饰类，可以自定义装饰需要装饰的方法，见 *MemoryInfos*
+
+.. code-block :: python
+
+	import datetime
+	import os
+	import re
+	import socket
+	import threading
+	import time
+	from functools import wraps
+
+	import psutil
+
+	import all_big_mm
+	import xdefine
+	import xlogging
+
+	_logger = xlogging.getLogger(__name__)
+	# 总核数 = 物理CPU个数 X 每颗物理CPU的核数
+	# 总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
+
+	# 查看物理CPU个数
+	# cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l
+
+	# 查看每个物理CPU中core的个数(即核数)
+	# cat /proc/cpuinfo| grep "cpu cores"| uniq
+
+	# 查看逻辑CPU的个数
+	# cat /proc/cpuinfo| grep "processor"| wc -l
+
+
+	cpu_info_path = "/proc/cpuinfo"
+	cpu_model = None
+	cpu_base_freq = None
+	version = '2.0.000000'
+
+	hard_info_lock = threading.Lock()
+	default_expire_secs = 1 * 60 * 60  # 默认缓存过期时间为1小时
+
+	cpu_info_cache = dict()  # cpu缓存
+	memory_info_cache = dict()  # 内存缓存
+	business_net_cache = dict()  # 业务数据通信网缓存
+	lan_net_cache = dict()  # 内部节点通信缓存
+	localhost_net_cache = dict()  # 本地环回网络缓存
+
+	cpu_cache_key = 'cpu'
+	memory_cache_key = 'memory'
+	b_cache_key = 'b_net'
+	lan_cache_key = 'lan'
+	localhost_net_cache_key = 'localhost'
+
+	cache_mapping = {
+		cpu_cache_key: cpu_info_cache,
+		memory_cache_key: memory_info_cache,
+		b_cache_key: business_net_cache,
+		lan_cache_key: lan_net_cache,
+		localhost_net_cache_key: localhost_net_cache,
+	}
+
+
+	def net_cache(ip, net_type):
+		if ip == '127.0.0.1':
+			return localhost_net_cache_key
+		else:
+			if net_type == xdefine.TYPE_OUTER_NETWORK_IO:
+				return b_cache_key
+			elif net_type == xdefine.TYPE_INNER_NETWORK_IO:
+				return lan_cache_key
+			else:
+				raise Exception('无效的网络类型')
+
+
+	def _get_aio_version():
+		global version
+		tfile = '/usr/sbin/aio/version.inc'
+		try:
+			lines = open(tfile, 'r').readline()
+			vec = lines.split('_')
+			if len(vec) >= 5:
+				version = '{}.{}'.format(get_big_version(), vec[0][2:] + vec[1] + vec[2][0:2])
+		except Exception as e:
+			_logger.info(e)
+
+
+	def fetch_ip_from_master():
+		ips = rr.rpc.op(rd.DASHBOARD_ROUTER_LOCATOR, 'sys_monitoring_conf', {}, rr.LOG_NONE)
+		return ips
+
+
+	def is_ipv6(ip):
+		"""校验是否为ipv6地址
+		:param ip: ip地址
+		:return: bool
+		"""
+		try:
+			socket.inet_pton(socket.AF_INET6, ip)
+		except socket.error:  # not a valid ip
+			return False
+		return True
+
+
+	def is_ipv4(ip):
+		"""校验是否为ipv4地址
+			:param ip: ip地址
+			:return: bool
+		"""
+		try:
+			socket.inet_pton(socket.AF_INET, ip)
+		except socket.error:  # not a valid ip
+			return False
+		return True
+
+
+	class AutoCacheHandler(object):
+		"""缓存装饰器类
+		"""
+
+		def __init__(self, obj, cache_key, method_list, expired_secs=default_expire_secs):
+			self.obj = obj
+			self.cache_key = cache_key
+			self.method_list = method_list
+			self.expired_secs = expired_secs
+
+		def iter(self):
+			for f_name in dir(self.obj):
+				if f_name in self.method_list:
+					yield f_name, getattr(self.obj, f_name)
+
+		def decorate(self):
+			for f_name, func in self.iter():
+				self.new_func(f_name, func)
+
+		def new_func(self, func_name, func):
+			assert callable(func), 'error: `{}`是不可调用的'.format(func_name)
+
+			@wraps(func)
+			def decor_func(*args):
+				cached_func = self.hard_info_cache(self.cache_key, func_name, self.expired_secs)(func)(*args)
+				return cached_func
+
+			setattr(self.obj, func_name, decor_func)
+
+		@staticmethod
+		def hard_info_cache(cache_key, info_key, expired_secs=default_expire_secs):
+			"""硬件信息缓存装饰器
+			:param cache_key: 取 [cpu_cache_key, memory_cache_key, b_cache_key, lan_cache_key] 之一
+			:param info_key: 参考MemoryInfos、CPUMonitoring、InternetMonitoring的docstring
+				* 具体的信息参数key, 例如CPU的最大速度，其info_key为frequency_max
+			:param expired_secs: 过期时间(秒)
+			"""
+
+			def wrapper(func):
+				@wraps(func)
+				def handler(*args):
+					"""
+					:param args: func的参数集
+					"""
+					now = time.time()
+					info = cache_mapping[cache_key].get(info_key, None)
+					if isinstance(info, list) and (info[-1] + expired_secs >= now):
+						return info[0]
+					else:  # 已过期
+						new_data = func(*args)
+						cache_mapping[cache_key][info_key] = [new_data, now]
+						return new_data
+
+				return handler
+
+			return wrapper
+
+
+	# 以内存为例
+	class MemoryInfos(object):
+		"""获取内存相关信息
+
+		:return:  memory:
+		{
+			node_ident: 唯一标识
+			type: cpu / memory / disk ...
+			speed: xxx MHz --str（速度）
+			m_slot: x/z --str（插槽）
+			total_size: xxx GB --str（总大小）
+			used: xxx MB --str（已用）
+			free: xxx MB --str（空余）
+			cache: xxx MB --str（缓存）
+			available: xxx MB --str（可用）
+			virtual_used: xxx MB --str（虚拟机占用）
+			temporary_used: xxx MB --str（临时占用）
+			orther_used: xxx MB --str（其它占用）
+			datetime: xxx --str
+		}
+		"""
+		# 带缓存的方法集合
+		cache_methods = (
+			'memory_speed',
+			'memory_m_slot',
+			'memory_total_size',
+		)
+
+		def __init__(self, **_):
+			AutoCacheHandler(self, memory_cache_key, self.cache_methods).decorate()
+
+		def memory_speed(self):
+			"""获取内存速度
+			:return: speed :xxx MHz --str
+			"""
+			_ = self
+			info_list = list()
+			speed_list = list()
+			cmd = "dmidecode | grep 'Speed'"
+			returncode, stdout, stderr = xpopen.execute_cmd(cmd)
+			lines = stdout.strip().split('\n\t')
+			if returncode != 0:
+				_logger.error("{} execute fail".format(cmd))
+			for infos in lines:
+				if 'Speed' in infos:
+					info_list.append(infos)
+			for info in list(set(info_list)):
+				if ': ' in info:
+					if info.split(": ")[1] != 'Unknown':
+						speed_list.append(info.split(": ")[1])
+			speed_list.sort()
+			return speed_list[0]
+
+		def memory_m_slot(self):
+			"""获取内存插槽数的使用情况
+			:return: m_slot：x/z --str
+			"""
+			_ = self
+			cmd = r"dmidecode | grep -P -A5 'Memory\s+Device' | grep Size | grep -v Range"
+			used_list = list()
+			not_used_list = list()
+			returncode, stdout, stderr = xpopen.execute_cmd(cmd)
+			lines = stdout.strip().split('\n\t')
+			if returncode != 0:
+				_logger.error("{} execute fail".format(cmd))
+			for slot in lines:
+				if "No Module Installed" in slot:
+					not_used_list.append(slot)
+				else:
+					used_list.append(slot)
+			m_slot_totals = len(not_used_list) + len(used_list)
+			m_slot = "{}/{}".format(len(used_list), m_slot_totals)
+			return m_slot
+
+		def memory_total_size(self):
+			"""获取内存总大小（所有内存条）
+			:return: size --int KB
+			"""
+			_ = self
+			cmd = "dmidecode -t memory | grep Size: | grep -v 'No Module Installed'"
+			returncode, stdout, stderr = xpopen.execute_cmd(cmd)
+			lines = stdout.strip().split('\n\t')
+			if returncode != 0:
+				_logger.error("{} execute fail".format(cmd))
+			devices_volume = []
+			for line in lines:
+				line = line.strip()
+				if line.startswith('Size') and line.endswith('MB'):
+					volume = ''.join(filter(str.isdigit, line))
+					if volume:
+						devices_volume.append(int(volume))
+
+			total_size = sum(devices_volume) * 1024  # 1 MB = 1 * 1024 KB
+			return total_size
+
+		def memory_info_used(self):
+			"""返回内存信息 int
+				:return: 可用容量(kB)，缓存容量(kB)，已用容量(kB)，剩余容量(kB)
+			"""
+			_ = self
+			mem = psutil.virtual_memory()
+			return int(mem.available), int(mem.cached), int(mem.used), int(mem.free)
+
+		def memory_occupy(self):
+			"""获取内存占用情况
+			:return: 临时占用（MB）,虚拟占用（MB）
+			"""
+			_ = self
+			return all_big_mm.CAllocBigMM.query_info()
+
+		def memory_result_infos(self):
+			"""组装参数集"""
+			available, cache, used, free = self.memory_info_used()
+			memory_occupy = self.memory_occupy()
+			memory_dict = {
+				'node_ident': rr.rpc_server.internal_ip,
+				'type': xdefine.TYPE_MEMORY_USED,
+				'speed': self.memory_speed(),  # MHz
+				'm_slot': self.memory_m_slot(),
+				'total_size': self.memory_total_size(),  # KB
+				'writevalue': int(used / 1024),  # KB  已使用的值  # readvalue 读的key
+				'free': free,  # KB
+				'available': available,  # KB
+				'cache': cache,  # KB
+				'total_virtual_memory': memory_occupy['total_memory_mb_for_takeover'],  # MB 虚拟总内存
+				'virtual_used': memory_occupy['used_memory_mb_for_takover'],  # MB 接管已用的虚拟内存
+				'temporary_used': memory_occupy['used_memory_mb_for_restore'],  # MB 恢复验证已用的虚拟内存
+				'other_used': round(used / 1024, 2) - memory_occupy['used_memory_mb'],  # MB
+				'version': version,
+				'datetime': datetime.datetime.now().timestamp()
+			}
+			return memory_dict
+
+..
