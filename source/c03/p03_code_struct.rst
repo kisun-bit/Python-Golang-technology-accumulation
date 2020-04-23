@@ -97,3 +97,18 @@ Go 中的包模型采用了显式依赖关系的机制来达到快速编译的�
 3. params_list list：参数列表，支持传递到函数内部的参数，可以是一个参数，也可以是多个参数(可变参数，用 name ...type来标识),这个值被称为实际参数。参数列表指定的是参数类型、顺序、及参数个数。参数是可选的，也就是说函数也可以不包含参数
 4. ret_types：返回类型，函数返回一列值。ret_types 是该列值的数据类型。有些功能不需要返回值，这种情况下 ret_types 不是必须的。
 5. do something：函数定义的代码集合。
+
+注意：与类C的编程语言相比，下述语法在Go中是错误的
+
+.. code-block:: go
+
+package main
+
+import (fout "fmt"; "os")
+
+func main()
+{
+	fout.Println("hello, world", os.Args)
+}
+
+..
