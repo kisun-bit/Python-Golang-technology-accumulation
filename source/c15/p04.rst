@@ -1,0 +1,22 @@
+15.4 谨慎使用“+”和“*”
+==================================
+
+Python的tuple为不可变类型，但是如果元组的内部元素为可变类型，却是可以对其修改的
+
++= 造成既改变了a[2], 又报出了 *TypeError: 'tuple' object does not support item assignment* 的异常
+
+>>> a = (1, 2, [1, 2, 3])
+>>> a[2] += [4, 5, 6]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+>>> a[2]
+[1, 2, 3, 4, 5, 6]
+
+使用extend来抑制异常
+
+>>> d = (1, 2, [1, 2, 3])
+>>> d[2].extend([4, 5, 6])
+>>> d[2]
+[1, 2, 3, 4, 5, 6]
+

@@ -271,7 +271,7 @@ filename  lineno(function)：每个函数调用的具体信息；
 	
 ..
 
-输入下面命令查看
+交互式命令查看
 
 .. code-block:: 
 
@@ -296,6 +296,13 @@ filename  lineno(function)：每个函数调用的具体信息；
 	##### 在交互式pstats环境中可以使用sort来查看帮助(使用哪一个参数项排序)
 ..
 
+脚本查看方式::
+
+import pstats
+p=pstats.Stats("result")                      #创建一上pstats变量
+p.strip_dirs().sort_stats(-1).print_stats()     #strip_dirs:从所有模块名中去掉无关的路径信息      
+p.strip_dirs().sort_stats("name").print_stats()  #sort_stats():把打印信息按照标准的module/name/line字符串进行排序
+p.strip_dirs().sort_stats("cumulative").print_stats(3)     #print_stats():打印出所有分析信息
 
 
 
