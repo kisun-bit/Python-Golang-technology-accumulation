@@ -1,6 +1,5 @@
-
-3.3 Go程序的基本结构
-============================
+3.3 《Go程序设计语言-读书笔记》-Go程序的基本结构
+===========================================================
 
 hello world
 >>>>>>>>>>>>>>>>>
@@ -102,13 +101,13 @@ Go 中的包模型采用了显式依赖关系的机制来达到快速编译的�
 
 .. code-block:: go
 
-package main
+	package main
 
-import (fout "fmt"; "os")
+	import (fout "fmt"; "os")
 
-func main()
-{
-	fout.Println("hello, world", os.Args)
-}
+	func main()
+	{
+		fout.Println("hello, world", os.Args)
+	}
 
 ..

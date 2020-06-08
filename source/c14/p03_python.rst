@@ -299,10 +299,10 @@ filename  lineno(function)：每个函数调用的具体信息；
 脚本查看方式::
 
 import pstats
-p=pstats.Stats("result")                      #创建一上pstats变量
-p.strip_dirs().sort_stats(-1).print_stats()     #strip_dirs:从所有模块名中去掉无关的路径信息      
-p.strip_dirs().sort_stats("name").print_stats()  #sort_stats():把打印信息按照标准的module/name/line字符串进行排序
-p.strip_dirs().sort_stats("cumulative").print_stats(3)     #print_stats():打印出所有分析信息
+p=pstats.Stats("result")
+p.strip_dirs().sort_stats(-1).print_stats()      
+p.strip_dirs().sort_stats("name").print_stats()
+p.strip_dirs().sort_stats("cumulative").print_stats(3)
 
 
 
