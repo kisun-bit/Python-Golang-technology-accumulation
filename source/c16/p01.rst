@@ -1,0 +1,66 @@
+16.1 参赛获奖经历
+=============================
+
+2018年中国计算机设计大赛微信小程序开发赛西南赛区二等奖
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-4.png" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+
+2018中国大学生计算机设计大赛四川省省级赛三等奖
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-1.jpg" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+2018四川省大学生计算机作品赛三等奖
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-2.jpeg" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+2018成都工业学院“奔腾杯”二等奖
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-5.png" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+2019科力锐2019年度优秀员工
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-3.png" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+大学英语四级成绩单
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-6.png" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
+
+大学英语六级成绩单
+
+.. raw:: html
+
+   <center>
+    <img src="../_static/c16-7.jpg" style="border: 2px solid #2980B9;padding:3px;" alt=""></img>
+   </center>
+..
