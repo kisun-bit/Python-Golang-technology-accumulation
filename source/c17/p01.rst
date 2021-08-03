@@ -1,0 +1,110 @@
+网址收藏夹
+=================
+
+下载助手：
+
+* ``Chrome`` 插件 ``CRX`` 下载地址：https://crxdl.com/
+* ``protobuf`` 工具下载地址：https://github.com/protocolbuffers/protobuf/releases
+* ``Git`` windows mirror：https://npm.taobao.org/mirrors/git-for-windows
+* 阿里云镜像：https://developer.aliyun.com/mirror/
+
+工具：
+
+* ``BootCDN`` 加速服务：https://www.bootcdn.cn/
+* ``IP`` 加速服务：https://www.ipaddress.com/
+* 代码命名看这里：https://unbug.github.io/codelf/
+* ``Iconfont`` -阿里巴巴矢量图标库：https://www.iconfont.cn/
+* ``DrawIO`` 在线绘图很奈斯：https://www.draw.io/
+* ``HTTP Bin`` 测试：http://www.httpbin.org/
+* 在线 ``RST`` 编辑：http://rst.ninjs.org/?theme=basic#Cg==
+* 超高清免费图库：https://unsplash.com/
+* 爬虫模拟Agent地址：http://www.useragentstring.com/pages/useragentstring.php?name=All
+* FQ：https://ntt-co-jp.club/auth/login
+
+个人中心：
+
+* ``leetcode`` ：https://leetcode-cn.com/problemset/all/
+* ``Python-Go-Technology-acc`` ：https://python-golang-technology-accumulation.readthedocs.io/en/latest/
+* ``Kisun Github`` ：https://github.com/kisunSea/
+* ``Kisun Blog`` ：https://www.cnblogs.com/
+* ``Kisun mail`` ：https://mail.google.com/mail/u/0/#inbox
+
+Go：
+
+* 超简洁的 ``GO`` 教程-极客兔兔：https://unsplash.com/
+* 自实现一个 ``Go Web`` 框架：https://geektutu.com/post/gee.html
+* 50个 ``Go`` 开发工程师容易踩的坑：http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/
+* 免费开源的 ``Go`` 在线书籍集绵：https://github.com/dariubs/GoBooks
+* ``Go`` 语言圣经在线书：https://books.studygolang.com/gopl-zh/
+* ``Go`` 学习之路在线书：https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md
+* ``Go LeetCode`` 刷题参考：https://github.com/austingebauer/go-leetcode
+* 李文周 ``Go`` 教程：https://www.liwenzhou.com/posts/Go/go_menu/
+* ``Go`` 语言高级编程：https://chai2010.cn/advanced-go-programming-book/ch6-cloud/ch6-01-dist-id.html
+* ``GORM`` 中文文档：http://gorm.book.jasperxu.com/crud.html#q
+* ``Protobuf`` 教程：https://colobu.com/2015/01/07/Protobuf-language-guide/
+* 一些 ``Go`` 的笔记：https://github.com/bingoohuang/blog/issues/84
+* 自写 ``Go`` 实现微服务框架iogo：http://www.coder55.com/article/1601
+* ``nats`` 教程：https://github.com/nats-io/nats.go
+
+Python
+
+* 虚拟化连载文章：https://zhuanlan.zhihu.com/c_1040263672760885248
+* ``Transitions-Python`` 状态机库：https://runnerliu.github.io/2017/05/26/transitionstranslate/
+* ``Pandas`` 中文文档：https://apachecn.github.io/pandas-doc-zh/
+* ``select`` 高效IO：https://learnku.com/docs/pymotw/select-wait-for-io-efficiently/3429
+* ``DRF``：https://www.liujiangblog.com/blog/43/
+* ``Python`` 元类编程：https://zhuanlan.zhihu.com/p/114242597
+* ``Pytest`` ：https://blog.csdn.net/weijiaxin2010/article/details/90217233
+* ``Python Tornado`` ：https://www.w3cschool.cn/python_tornado/
+* ``Python cook`` ：https://python3-cookbook.readthedocs.io/zh_CN/latest/chapters/p11_network_and_web_program.html
+* ``Django`` 文档：https://docs.djangoproject.com/zh-hans/2.1/
+* ``Flask`` 文档：https://www.w3cschool.cn/flask/
+
+web
+
+* ``Bootstrap`` 文档：https://v3.bootcss.com/
+* ``CSS3`` 开发文档：https://segmentfault.com/a/1190000018585523
+* ``HTML5 Symbols`` ：https://www.htmlsymbols.xyz/unicode/U+2713
+* ``Vue`` 教程：https://cn.vuejs.org/v2/guide/
+* ``JS`` 教程：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Expressions_and_Operators
+* ``swiper`` 插件：https://www.swiper.com.cn/usage/index.html
+* 解决80%的10个 ``css`` 动画库：https://juejin.im/post/6859713431755784205
+* 微信开放文档：https://developers.weixin.qq.com/miniprogram/dev/framework/
+* ``WeUI`` 组件库：https://developers.weixin.qq.com/miniprogram/dev/extended/weui/
+* 微信公众平台：https://mp.weixin.qq.com/wxopen/devprofile?action=get_profile&token=950849657&lang=zh_CN
+
+linux/windows:
+
+* 鸟叔的 ``linux`` 私房菜：http://cn.linux.vbird.org/linux_basic/linux_basic.php
+* ``linux bash`` 在线速查：https://www.linuxcool.com/
+* ``windows`` 命令：https://docs.microsoft.com/zh-cn/windows-server/administration/windows-commands/windows-commands
+
+DB：
+
+* ``MySQL`` 优化-视频：https://www.bilibili.com/video/av29072634?from=search&seid=15307349980898859190
+* ``Redis`` 教程-视频：https://www.bilibili.com/video/av56613093?from=search&seid=1973496505273093644
+* ``Redis`` 文档：https://docs.pythontab.com/redis/redisbook/feature/pubsub.html
+* 数据库索引和锁：https://juejin.im/post/6844903645125820424
+* ``Mysql`` 文档：https://www.mysqlzh.com/
+
+middleware：
+
+* ``rabbitMQ`` 文档：https://www.rabbitmq.com/tutorials/tutorial-three-python.html
+* ``ICE`` 文档：https://doc.zeroc.com/ice/3.7/hello-world-application/writing-an-ice-application-with-python
+
+CD/CI：
+
+* ``ETCD`` 官方文档：https://doczhcn.gitbook.io/etcd/index
+* ``Docker`` 从入门到实践：https://yeasy.gitbook.io/docker_practice/
+* ``Git`` 常用操作命令：https://juejin.im/post/6844903586120335367
+* ``Consul`` 中文文档：https://kingfree.gitbook.io/consul/
+* ``Jenkins`` 详细教程：https://www.jianshu.com/p/5f671aca2b5a
+* ``Docker`` 命令大全：https://www.runoob.com/docker/docker-command-manual.html
+
+other：
+
+* ``reStructureText`` 语法文档：https://3vshej.cn/rstSyntax/index.html
+* 计算机基础面试集绵：https://github.com/wolverinn/Waking-Up
+* ``Android`` 开发全套Github文档：
+* 程序员小灰漫画算法：https://www.lagou.com/lgeduarticle/51101.html
+* B站技术总监毛剑谈架构：https://zhuanlan.zhihu.com/p/139258985
